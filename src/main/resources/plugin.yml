@@ -1,9 +1,9 @@
-name: ST-BoilerPlate # TODO: 수정
-main: net.starly.boilerplate.BoilerPlateMain # TODO: 수정
+name: ST-QuickMenu
+main: net.starly.qm.QuickMenu
 author: Starly Team
 website: http://starly.kr/discord
 
-description: BoilerPlate Plugin. # TODO: 수정
+description: QuickMenu Plugin.
 
 softdepend:
   - ST-Core
@@ -11,4 +11,12 @@ softdepend:
 version: 1.0
 api-version: 1.13
 
+permissions:
+  net.starly.qm.command:
+    description: 퀵메뉴 명령어 퍼미션
+  net.starly.qm.use:
+    description: 퀵메뉴 사용 퍼미션
+
 commands:
+  quick-menu:
+    aliases: [qm, 퀵메뉴]

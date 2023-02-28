@@ -1,8 +1,9 @@
 plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.8.10"
     id 'java'
 }
 
-group 'net.starly.boilerplate' // TODO: 수정
+group 'net.starly.qm'
 version '1.0'
 
 repositories {
@@ -22,6 +23,9 @@ dependencies {
 
     // OTHER DEPENDENCIES
     compileOnly "net.starly.core:ST-Core:1.6.2"
+
+    // KOTLIN
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 tasks.withType(JavaCompile) {
