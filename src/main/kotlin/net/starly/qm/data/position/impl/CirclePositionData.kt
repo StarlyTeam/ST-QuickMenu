@@ -14,25 +14,25 @@ class CirclePositionData(
     override val count: Int,
 ) : PositionData {
 
-    override fun getLocations(player: Player): List<Location> =
-        createCircle(player)
+    override fun getLocations(center: Location): List<Location> =
+        createCircle(center)
 
-    override fun getBaseLocation(player: Player): Location {
-        val dist = player.eyeLocation.direction.multiply(BUTTON_DISTANCE_AT_PLAYER)
-        return player.eyeLocation.add(dist).apply { y -= 0.8 }
+    override fun getBaseLocation(center: Location): Location {
+        val dist = center.direction.multiply(BUTTON_DISTANCE_AT_PLAYER)
+        return center.clone().add(dist).apply { y -= 0.8 }
     }
 
-    private fun createCircle(player: Player): List<Location> {
+    private fun createCircle(center: Location): List<Location> {
         if (count == 0) return emptyList()
 
         val result = ArrayList<Location>()
-        val mid: Location = getBaseLocation(player)
+        val mid: Location = getBaseLocation(center)
         for (i in 0 until count) {
             val angle: Double = 2 * Math.PI * i / count
             val x: Double = cos(angle) * CIRCLE_RADIUS
             val y: Double = sin(angle) * CIRCLE_RADIUS
-            var v: Vector = rotateAroundAxisX(Vector(x, y, 0.0), player.eyeLocation.pitch.toDouble())
-            v = rotateAroundAxisY(v, player.eyeLocation.yaw.toDouble())
+            var v: Vector = rotateAroundAxisX(Vector(x, y, 0.0), center.pitch.toDouble())
+            v = rotateAroundAxisY(v, center.yaw.toDouble())
             result.add(mid.clone().add(v))
         }
 

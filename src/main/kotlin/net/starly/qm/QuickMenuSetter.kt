@@ -5,6 +5,7 @@ import net.starly.core.jb.command.STArgument
 import net.starly.qm.button.QuickButton
 import net.starly.qm.command.QuickMenuCommand
 import net.starly.qm.data.PlayerStateData
+import net.starly.qm.data.PresetData
 import net.starly.qm.data.position.PositionData
 import net.starly.qm.enum.CallBackReason
 import net.starly.qm.loader.impl.ConfigLoader
@@ -13,6 +14,7 @@ import net.starly.qm.repo.impl.PositionDataRepository
 import net.starly.qm.repo.impl.PresetDataRepository
 import net.starly.qm.runnable.RightClickCallBackRunnable
 import net.starly.qm.setting.impl.message.MessageSetting
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
@@ -33,23 +35,21 @@ object QuickMenuSetter {
         )
     }
 
-    fun start(player: Player, stateRepo: PlayerDataRepository, plugin: QuickMenu) {
-        val preset = plugin.serverPreset
+    fun start(player: Player, stateRepo: PlayerDataRepository, plugin: QuickMenu, preset: PresetData = plugin.serverPreset, center: Location? = null) {
         preset.position.let { position ->
             val data = PlayerStateData(player.location.clone())
             stateRepo.register(player.uniqueId, data)
             player.addPotionEffect(PotionEffect(PotionEffectType.SLOW_DIGGING, Int.MAX_VALUE, 999, false, false))
             val list: MutableList<QuickButton> = ArrayList()
-            val base = position.getBaseLocation(player)
-
-            position.getLocations(player).forEachIndexed { index, loc ->
+            val base = position.getBaseLocation(center?: player.eyeLocation)
+            position.getLocations((center?: player.eyeLocation).clone()).forEachIndexed { index, loc ->
                 list.add(QuickButton(player, preset.buttons[index], data, base, loc, plugin)) }
-
-            runCallBackRunnable(player, data, list, stateRepo, plugin)
+            val next = center?: player.eyeLocation
+            runCallBackRunnable(player, data, list, stateRepo, plugin, next)
         }
     }
 
-    private fun runCallBackRunnable(player: Player, data: PlayerStateData, buttons: List<QuickButton>, stateRepo: PlayerDataRepository, plugin: JavaPlugin) {
+    private fun runCallBackRunnable(player: Player, data: PlayerStateData, buttons: List<QuickButton>, stateRepo: PlayerDataRepository, plugin: JavaPlugin, base: Location?) {
         val task = plugin.server.scheduler.runTaskTimerAsynchronously(
             plugin,
             Runnable { buttons.forEach { it.update(player) } },
@@ -64,7 +64,7 @@ object QuickMenuSetter {
                 CallBackReason.CLICK_OFF, CallBackReason.CHANGE_SLOT -> {
                     data.delay()
                     buttons.firstOrNull { button -> button.targeted }?.apply {
-                        plugin.server.scheduler.runTask(plugin) { button.onSelect(target) }
+                        plugin.server.scheduler.runTask(plugin) { button.onSelect(target, base) }
                     }
                 }
                 CallBackReason.TIME_OUT -> {

@@ -14,19 +14,19 @@ class LinePositionData(
     override val count: Int,
 ) : PositionData {
 
-    override fun getLocations(player: Player): List<Location> =
-        createLine(player)
+    override fun getLocations(center: Location): List<Location> =
+        createLine(center)
 
-    override fun getBaseLocation(player: Player): Location {
-        val dist = player.eyeLocation.direction.multiply(BUTTON_DISTANCE_AT_PLAYER)
-        return player.eyeLocation.add(dist).apply { y -= 0.8 }
+    override fun getBaseLocation(center: Location): Location {
+        val dist = center.direction.multiply(BUTTON_DISTANCE_AT_PLAYER)
+        return center.add(dist).apply { y -= 0.8 }
     }
 
-    private fun createLine(player: Player): List<Location> {
+    private fun createLine(center: Location): List<Location> {
         if (count == 0) return emptyList()
 
         val result = ArrayList<Location>()
-        val mid: Location = getBaseLocation(player)
+        val mid: Location = getBaseLocation(center)
         for (i in 0 until count) {
             if(count % 2 == 1) {
                 val center = count / 2

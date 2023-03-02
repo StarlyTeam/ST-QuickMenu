@@ -2,7 +2,7 @@ package net.starly.qm.listener.unregist
 
 import net.starly.qm.QuickMenu
 import net.starly.qm.QuickMenuSetter
-import net.starly.qm.listener.IconHandleListener
+import net.starly.qm.listener.QBIconHandleListener
 import net.starly.qm.listener.UnregisterListener
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
@@ -11,7 +11,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
-class RightClickListener(
+class QBRightClickListener(
     private val plugin: QuickMenu
 ): UnregisterListener {
 
@@ -27,7 +27,7 @@ class RightClickListener(
     private fun action(player: Player, hand: EquipmentSlot?, cancellable: Cancellable, action: Action) {
         if(hand != EquipmentSlot.HAND || action == Action.PHYSICAL) return
         val item = player.inventory.itemInMainHand
-        if(!IconHandleListener.isIcon(item)) return
+        if(!QBIconHandleListener.isIcon(item)) return
 
         cancellable.isCancelled = true
         if(stateRepo.contains(player.uniqueId)) return

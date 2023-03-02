@@ -22,6 +22,12 @@ class PlayerStateData(
         state = PlayerState.DELAY
     }
 
+    fun reset() {
+        proc = RIGHT_CLICK_PROC_TICK
+        maintain = 0
+        state = PlayerState.RIGHT_CLICK
+    }
+
     fun moveOtherBlock() {
         state = PlayerState.MOVE_BLOCK
     }

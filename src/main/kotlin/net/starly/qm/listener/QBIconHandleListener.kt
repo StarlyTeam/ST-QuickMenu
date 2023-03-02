@@ -1,6 +1,5 @@
 package net.starly.qm.listener
 
-import com.sun.deploy.config.DefaultConfig
 import net.starly.core.jb.version.nms.tank.NmsItemStackUtil
 import net.starly.qm.loader.impl.ConfigLoader
 import net.starly.qm.setting.impl.DefaultSetting
@@ -16,7 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 
-class IconHandleListener: Listener {
+class QBIconHandleListener: Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onSwap(event: PlayerSwapHandItemsEvent) {

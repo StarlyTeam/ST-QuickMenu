@@ -1,9 +1,9 @@
 package net.starly.qm.loader.impl
 
 import net.starly.qm.QuickMenu
-import net.starly.qm.listener.IconHandleListener
-import net.starly.qm.listener.unregist.RightClickListener
-import net.starly.qm.listener.unregist.ShiftFListener
+import net.starly.qm.listener.QBIconHandleListener
+import net.starly.qm.listener.unregist.QBRightClickListener
+import net.starly.qm.listener.unregist.QBShiftFListener
 import net.starly.qm.listener.UnregisterListener
 import net.starly.qm.setting.Setting
 import net.starly.qm.loader.Loader
@@ -18,7 +18,7 @@ object ConfigLoader: Loader<Setting> {
     private val listeners = ArrayList<Listener>()
 
     override fun load(plugin: QuickMenu) {
-        plugin.server.onlinePlayers.forEach(IconHandleListener::clearingIcon)
+        plugin.server.onlinePlayers.forEach(QBIconHandleListener::clearingIcon)
         settings.clear()
         listeners.filterIsInstance<UnregisterListener>().forEach(UnregisterListener::unregister)
         listeners.clear()
@@ -34,10 +34,10 @@ object ConfigLoader: Loader<Setting> {
                 when(it) {
                     DefaultSetting.OpenType.COMMAND-> {}
                     DefaultSetting.OpenType.ICON-> {
-                        listeners.add(RightClickListener(plugin))
+                        listeners.add(QBRightClickListener(plugin))
                         plugin.server.onlinePlayers.forEach { player -> player.inventory.setItem(icon.slot - 1, icon.headIcon.clone()) }
                     }
-                    DefaultSetting.OpenType.SHIFT_F-> listeners.add(ShiftFListener(plugin))
+                    DefaultSetting.OpenType.SHIFT_F-> listeners.add(QBShiftFListener(plugin))
                 }
             }
         }

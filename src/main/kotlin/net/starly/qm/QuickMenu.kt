@@ -1,16 +1,14 @@
 package net.starly.qm
 
-import net.starly.core.StarlyCore
 import net.starly.core.bstats.Metrics
-import net.starly.core.jb.command.STArgument
 import net.starly.qm.command.QuickMenuCommand
 import net.starly.qm.data.PresetData
 import net.starly.qm.data.position.PositionData
 import net.starly.qm.data.position.impl.CirclePositionData
 import net.starly.qm.data.position.impl.LinePositionData
-import net.starly.qm.listener.IconHandleListener
-import net.starly.qm.listener.LeftClickListener
-import net.starly.qm.listener.PlayerMoveListener
+import net.starly.qm.listener.QBIconHandleListener
+import net.starly.qm.listener.QBLeftClickListener
+import net.starly.qm.listener.QBPlayerMoveListener
 import net.starly.qm.loader.impl.ConfigLoader
 import net.starly.qm.repo.DataRepository
 import net.starly.qm.repo.impl.PlayerDataRepository
@@ -22,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class QuickMenu : JavaPlugin() {
 
+    companion object { internal lateinit var plugin: QuickMenu }
     internal val playerDataRepository by lazy { PlayerDataRepository() }
     internal val positionDataRepository by lazy { PositionDataRepository() }
     internal lateinit var presetDateRepository: PresetDataRepository
@@ -38,6 +37,7 @@ class QuickMenu : JavaPlugin() {
 
         Metrics(this, 17837)
 
+        plugin = this
 
         DelayCheckRunnable(playerDataRepository).runTaskTimerAsynchronously(this, 2L, 2L)
         generatePositions(positionDataRepository)
@@ -47,9 +47,9 @@ class QuickMenu : JavaPlugin() {
         serverPreset = presetDateRepository.get(ConfigLoader.get(null, DefaultSetting::class.java).preset)
 
         server.pluginManager.apply {
-            registerEvents(IconHandleListener(), this@QuickMenu)
-            registerEvents(LeftClickListener(this@QuickMenu), this@QuickMenu)
-            registerEvents(PlayerMoveListener(this@QuickMenu), this@QuickMenu)
+            registerEvents(QBIconHandleListener(), this@QuickMenu)
+            registerEvents(QBLeftClickListener(this@QuickMenu), this@QuickMenu)
+            registerEvents(QBPlayerMoveListener(this@QuickMenu), this@QuickMenu)
         }
 
         QuickMenuSetter.initializingSetter(this)

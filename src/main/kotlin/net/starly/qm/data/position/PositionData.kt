@@ -7,7 +7,7 @@ interface PositionData {
 
     val key: String
     val count: Int
-    fun getLocations(player: Player): List<Location>
-    fun getBaseLocation(player: Player): Location
+    fun getLocations(center: Location): List<Location>
+    fun getBaseLocation(center: Location): Location
 
 }

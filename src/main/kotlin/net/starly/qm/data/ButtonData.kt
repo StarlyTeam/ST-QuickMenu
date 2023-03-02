@@ -1,12 +1,14 @@
 package net.starly.qm.data
 
-import net.starly.core.jb.util.ItemStackNameUtil
 import net.starly.core.jb.util.PlayerSkullManager
+import net.starly.qm.QuickMenu.Companion.plugin
+import net.starly.qm.QuickMenuSetter
 import net.starly.qm.context.NONE_BUTTON_URL
 import net.starly.qm.data.stream.Readable
 import net.starly.qm.data.stream.Writeable
 import net.starly.qm.loader.impl.ConfigLoader
 import net.starly.qm.setting.impl.message.MessageSetting
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
@@ -50,9 +52,21 @@ class ButtonData: Writeable, Readable {
     }
 
     fun onTarget(player: Player) { targetSound.playSound(player) }
-    fun onSelect(player: Player) {
+    fun onSelect(player: Player, base: Location?) {
         selectSound.playSound(player)
-        command?.apply { runOpCommand(player) }?: ConfigLoader.get(null, MessageSetting::class.java).sendMessage(player, "none-command")
+        command?.apply {
+            if(this.startsWith("프리셋")) {
+                val presetTarget = substring(4)
+                if(plugin.presetDateRepository.contains(presetTarget)) {
+                    plugin.presetDateRepository.get(presetTarget).apply {
+                        plugin.playerDataRepository.unregister(player.uniqueId)
+                        QuickMenuSetter.start(player, plugin.playerDataRepository, plugin, this, base)
+                    }
+                }
+                return
+            }
+            runOpCommand(player)
+        }?: ConfigLoader.get(null, MessageSetting::class.java).sendMessage(player, "none-command")
     }
 
     private fun runOpCommand(player: Player) {

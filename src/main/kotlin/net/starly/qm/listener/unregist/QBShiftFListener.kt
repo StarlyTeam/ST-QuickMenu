@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 
-class ShiftFListener(
+class QBShiftFListener(
     private val plugin: QuickMenu,
 ) : UnregisterListener {
 
