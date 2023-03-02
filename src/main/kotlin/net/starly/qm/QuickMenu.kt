@@ -1,11 +1,32 @@
 package net.starly.qm
 
+import net.starly.core.StarlyCore
 import net.starly.core.bstats.Metrics
+import net.starly.core.jb.command.STArgument
+import net.starly.qm.command.QuickMenuCommand
+import net.starly.qm.data.PresetData
+import net.starly.qm.data.position.PositionData
+import net.starly.qm.data.position.impl.CirclePositionData
+import net.starly.qm.data.position.impl.LinePositionData
+import net.starly.qm.listener.IconHandleListener
+import net.starly.qm.listener.LeftClickListener
+import net.starly.qm.listener.PlayerMoveListener
+import net.starly.qm.loader.impl.ConfigLoader
+import net.starly.qm.repo.DataRepository
+import net.starly.qm.repo.impl.PlayerDataRepository
+import net.starly.qm.repo.impl.PositionDataRepository
+import net.starly.qm.repo.impl.PresetDataRepository
+import net.starly.qm.runnable.DelayCheckRunnable
+import net.starly.qm.setting.impl.DefaultSetting
 import org.bukkit.plugin.java.JavaPlugin
 
 class QuickMenu : JavaPlugin() {
 
-    companion object { internal lateinit var plugin: QuickMenu }
+    internal val playerDataRepository by lazy { PlayerDataRepository() }
+    internal val positionDataRepository by lazy { PositionDataRepository() }
+    internal lateinit var presetDateRepository: PresetDataRepository
+    internal lateinit var serverPreset: PresetData
+
     override fun onEnable() {
         // DEPENDENCY
         if(server.pluginManager.getPlugin("ST-Core") == null) {
@@ -14,17 +35,33 @@ class QuickMenu : JavaPlugin() {
                 warning("[$name] 다운로드 링크 : §fhttp://starly.kr/discord")
             }
         }
-        plugin = this
-        Metrics(this, 12345) // TODO: 수정
 
-        // CONFIG
-        // TODO: 작성
+        Metrics(this, 17837)
 
-        // COMMAND
-        // TODO: 작성
 
-        // EVENT
-        // TODO: 작성
+        DelayCheckRunnable(playerDataRepository).runTaskTimerAsynchronously(this, 2L, 2L)
+        generatePositions(positionDataRepository)
+        presetDateRepository = PresetDataRepository(this)
+
+        ConfigLoader.load(this)
+        serverPreset = presetDateRepository.get(ConfigLoader.get(null, DefaultSetting::class.java).preset)
+
+        server.pluginManager.apply {
+            registerEvents(IconHandleListener(), this@QuickMenu)
+            registerEvents(LeftClickListener(this@QuickMenu), this@QuickMenu)
+            registerEvents(PlayerMoveListener(this@QuickMenu), this@QuickMenu)
+        }
+
+        QuickMenuSetter.initializingSetter(this)
+        QuickMenuCommand(this)
+    }
+
+    private fun generatePositions(repo: DataRepository<String, PositionData>) {
+        for(i in 2 .. 10) {
+            repo.register("CIRCLE_$i", CirclePositionData("CIRCLE_$i", i))
+            if(i < 8)
+            repo.register("LINE_$i", LinePositionData("LINE_$i", i))
+        }
     }
 
 }

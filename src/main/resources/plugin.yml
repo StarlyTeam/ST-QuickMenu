@@ -12,10 +12,16 @@ version: 1.0
 api-version: 1.13
 
 permissions:
-  net.starly.qm.command:
+  starly.qm.reload:
     description: 퀵메뉴 명령어 퍼미션
-  net.starly.qm.use:
-    description: 퀵메뉴 사용 퍼미션
+  starly.qm.apply:
+    description: 퀵메뉴 명령어 퍼미션
+  starly.qm.modify:
+    description: 퀵메뉴 명령어 퍼미션
+  starly.qm.remove:
+    description: 퀵메뉴 명령어 퍼미션
+  starly.qm.create:
+    description: 퀵메뉴 명령어 퍼미션
 
 commands:
   quick-menu:
