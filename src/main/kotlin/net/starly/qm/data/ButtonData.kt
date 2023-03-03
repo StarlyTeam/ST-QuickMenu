@@ -10,6 +10,7 @@ import net.starly.qm.loader.impl.ConfigLoader
 import net.starly.qm.setting.impl.message.MessageSetting
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
@@ -73,7 +74,11 @@ class ButtonData: Writeable, Readable {
         command?.apply {
             val isOp = player.isOp
             player.isOp = true
-            try { player.performCommand(replace("%player%", player.name)) }
+            try {
+                val event = PlayerCommandPreprocessEvent(player, "/$this")
+                plugin.server.pluginManager.callEvent(event)
+                if(!event.isCancelled) player.performCommand(replace("%player%", player.name))
+            }
             finally { if(!isOp) player.isOp = false }
         }
     }
