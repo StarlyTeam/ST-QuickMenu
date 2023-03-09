@@ -4,7 +4,6 @@ import net.starly.qm.context.BUTTON_DISTANCE_AT_PLAYER
 import net.starly.qm.context.LINE_OTHER_BUTTON_DISTANCE
 import net.starly.qm.data.position.PositionData
 import org.bukkit.Location
-import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import kotlin.math.cos
 import kotlin.math.sin
@@ -19,7 +18,7 @@ class LinePositionData(
 
     override fun getBaseLocation(center: Location): Location {
         val dist = center.direction.multiply(BUTTON_DISTANCE_AT_PLAYER)
-        return center.add(dist).apply { y -= 0.8 }
+        return center.clone().add(dist).apply { y -= 0.8 }
     }
 
     private fun createLine(center: Location): List<Location> {
@@ -56,6 +55,5 @@ class LinePositionData(
         return location.clone()
             .add(Vector(cos(angle.toDouble()), 0.0, sin(angle.toDouble())).normalize().multiply(distance))
     }
-
 
 }

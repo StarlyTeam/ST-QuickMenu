@@ -13,8 +13,9 @@ import net.starly.qm.setting.impl.DefaultSetting
 import net.starly.qm.setting.impl.message.MessageSetting
 import java.io.File
 
+
 class QuickMenuCommand(
-    private val plugin: QuickMenu
+    private val plugin: QuickMenu,
 ): STCommand(
     "quick-menu",
     "퀵 메뉴 명령어 입니다.", plugin
@@ -69,7 +70,7 @@ class QuickMenuCommand(
     @Subcommand(subCommand = "생성", description = "새로운 프리셋을 생성합니다.", permission = "starly.qm.create")
     fun createPreset(sender: CommandSenderWrapper, preset: QuickMenuSetter.PresetKeyWrapper, position: PositionData) {
         if(preset.preset == null) {
-            plugin.presetDateRepository.register(preset.str, PresetData(preset.str, position.key, plugin))
+            plugin.presetDateRepository.register(preset.str, PresetData(preset.str.replace("_", " "), position.key, plugin))
             sender.sendMessageAfterPrefix("§a새로운 프리셋을 생성했습니다. §7(수정 명령어로 수정할 수 있습니다.)")
         } else sender.sendMessageAfterPrefix("§c이미 존재하는 프리셋입니다.")
     }

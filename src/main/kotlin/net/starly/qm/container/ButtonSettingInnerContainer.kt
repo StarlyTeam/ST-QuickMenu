@@ -56,7 +56,7 @@ class ButtonSettingInnerContainer(
         val copyListLore = ArrayList<String>()
         copyListLore.addAll(listOf("", "§e ▸ §f현재 모드 : ${if(copyMode) "§a복사모드" else "§6붙여넣기모드"}",""))
         for(i in 0 .. 8) {
-            copyListLore.add("§a[${i + 1}] " + (getCopy(viewer, i)?.run { "${this.sound?.name?:"§7타입없음"}, ${this.volume.toFormattedString()} ,${this.pitch.toFormattedString()}" }?:"§7비어있음"))
+            copyListLore.add("§a[${i + 1}] " + (getCopy(viewer, i)?.run { "${this.sound?:"§7타입없음"}, ${this.volume.toFormattedString()} ,${this.pitch.toFormattedString()}" }?:"§7비어있음"))
         }
         copyListLore.addAll(listOf("","§e ▸ §f클릭하여 모드를 변경할 수 있습니다.", ""))
         STButtonBuilder(Material.PAPER)
@@ -89,6 +89,7 @@ class ButtonSettingInnerContainer(
             .setClickFunction { event, _ ->
                 event.player.sendMessageAfterPrefix("§f설정 할 명령어를 입력하세요.")
                 event.player.sendMessage(" §7 플레이어 닉네임이 명령어에 포함된다면 %player% 를 사용할 수 있습니다.")
+                event.player.sendMessage(" §7 다른 프리셋을 여는경우, '프리셋 <프리셋이름>' 을 입력하세요.")
                 event.player.sendMessage(" §7 취소 : '취소' 입력")
                 event.player.sendMessage(" §7 삭제 : '-' 입력")
                 registerCheckListener(event.player) {
@@ -97,6 +98,14 @@ class ButtonSettingInnerContainer(
                         event.player.sendMessageAfterPrefix("§a커맨드가 삭제 되었습니다.")
                         refresh()
                     } else if(it != "취소") {
+                        if(it.startsWith("프리셋")) {
+                            val target = it.replace("_", " ").substring(4)
+                            if(preset.key == target) {
+                                event.player.sendMessageAfterPrefix("§c같은 프리셋은 열 수 없습니다.")
+                                open(event.player)
+                                return@registerCheckListener
+                            }
+                        }
                         button.command = it
                         event.player.sendMessageAfterPrefix("§a커맨드가 등록 되었습니다.")
                         refresh()
@@ -116,7 +125,7 @@ class ButtonSettingInnerContainer(
             soundLore.addAll(listOf(
                 "",
                 "§e ▸ §f버튼 ${pair.second}시, 출력 될 사운드를 설정합니다.",
-                "§e ▸ §f현재 사운드 : §e${pair.first.sound?.name ?: "§7없음"}",
+                "§e ▸ §f현재 사운드 : §e${pair.first.sound?: "§7없음"}",
                 "§e ▸ §f볼륨 : §e${pair.first.volume.toFormattedString()}",
                 "§e ▸ §f피치 : §e${pair.first.pitch.toFormattedString()}",
                 "",
@@ -186,7 +195,8 @@ class ButtonSettingInnerContainer(
 
                         event.isWheel -> {
                             player.sendMessageAfterPrefix("§f설정 할 사운드를 아래의 사이트에 있는 목록 중 선택하여 입력하세요.")
-                            player.sendMessage(" §a§nhttps://helpch.at/docs/${VersionController.getInstance().version.v}/org/bukkit/Sound.html")
+                            player.sendMessage(" §a§nhttps://helpch.at/docs/${VersionController.getInstance().version.v.replace("-R0.1", "")}/org/bukkit/Sound.html")
+                            player.sendMessage(" §a혹은 '/playsound' 명령어에서 찾을 수 있는 키 값을 입력해도 됩니다.")
                             player.sendMessage(" §7 취소 : '취소' 입력")
                             player.sendMessage(" §7 삭제 : '-' 입력")
                             registerCheckListener(player) {
@@ -197,13 +207,11 @@ class ButtonSettingInnerContainer(
                                         player.sendMessageAfterPrefix("§a사운드가 삭제 되었습니다.")
                                         refresh()
                                     }
-                                    else -> try {
-                                        pair.first.sound = Sound.valueOf(it)
+                                    else -> {
+                                        pair.first.sound = it
                                         player.sendMessageAfterPrefix("§a사운드가 설정 되었습니다.")
                                         pair.first.playSound(player)
                                         refresh()
-                                    } catch (_: Exception) {
-                                        player.sendMessageAfterPrefix("§c찾을 수 없는 사운드입니다.")
                                     }
                                 }
                                 open(player)

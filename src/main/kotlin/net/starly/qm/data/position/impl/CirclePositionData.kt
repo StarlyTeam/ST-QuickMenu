@@ -4,7 +4,6 @@ import net.starly.qm.context.BUTTON_DISTANCE_AT_PLAYER
 import net.starly.qm.context.CIRCLE_RADIUS
 import net.starly.qm.data.position.PositionData
 import org.bukkit.Location
-import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import kotlin.math.cos
 import kotlin.math.sin

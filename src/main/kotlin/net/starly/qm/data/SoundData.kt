@@ -10,36 +10,37 @@ import org.bukkit.util.io.BukkitObjectOutputStream
 
 class SoundData: Writeable, Readable {
 
-    var sound: Sound? = null
+    var sound: String? = null
     var volume: Float = 1f
     var pitch: Float = 1f
 
     constructor()
-    constructor(sound: Sound?, volume: Float, pitch: Float) {
+    constructor(sound: String?, volume: Float, pitch: Float) {
         this.sound = sound
         this.volume = volume
         this.pitch = pitch
     }
 
     override fun write(buf: BukkitObjectOutputStream) {
-        buf.writeUTF(sound?.name?:"")
+        buf.writeUTF(sound?:"")
         buf.writeFloat(volume)
         buf.writeFloat(pitch)
     }
 
     override fun read(buf: BukkitObjectInputStream) {
-        sound = try {
-            val strSound = buf.readUTF()
-            if(strSound.isNotEmpty())
-                Sound.valueOf(strSound)
-            else null
-        } catch (_: Exception) { null }
+        sound = buf.readUTF().run { ifEmpty { null } }
         volume = buf.readFloat()
         pitch = buf.readFloat()
     }
 
     fun playSound(player: Player) {
-        sound?.apply { player.playSound(player.location, this, volume, pitch) }
+        sound?.also {
+            try {
+                player.playSound(player.location, Sound.valueOf(it.uppercase()), volume, pitch)
+            } catch (e: Exception) {
+                player.playSound(player.location, it, volume, pitch)
+            }
+        }
     }
 
     override fun toString(): String = sound?.run { "$this, ${volume.toFormattedString()}, ${pitch.toFormattedString()}" }?: "§7없음"

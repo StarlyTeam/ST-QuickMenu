@@ -24,7 +24,7 @@ class PresetDataRepository(
     init {
         if(!folder.exists()) folder.mkdirs()
         folder.listFiles()?.forEach {
-            val name = it.name.run { substring(0, length - 4) }
+            val name = it.name.run { substring(0, length - 4).replace("_"," ") }
             FileInputStream(it).use { stream ->
                 val data = ByteArray(it.length().toInt())
                 stream.read(data)

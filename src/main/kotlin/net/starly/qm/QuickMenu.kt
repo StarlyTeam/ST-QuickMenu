@@ -5,6 +5,7 @@ import net.starly.qm.command.QuickMenuCommand
 import net.starly.qm.data.PresetData
 import net.starly.qm.data.position.PositionData
 import net.starly.qm.data.position.impl.CirclePositionData
+import net.starly.qm.data.position.impl.GridPositionData
 import net.starly.qm.data.position.impl.LinePositionData
 import net.starly.qm.listener.QBIconHandleListener
 import net.starly.qm.listener.QBLeftClickListener
@@ -62,6 +63,8 @@ class QuickMenu : JavaPlugin() {
             if(i < 8)
             repo.register("LINE_$i", LinePositionData("LINE_$i", i))
         }
+        for(i in 2..3)
+            repo.register("MATRIX_${i}X${i}", GridPositionData("MATRIX_${i}X$i", i*i))
     }
 
 }

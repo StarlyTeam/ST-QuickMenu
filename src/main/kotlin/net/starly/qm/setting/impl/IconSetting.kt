@@ -25,6 +25,7 @@ class IconSetting: Setting {
         val url = section.getString("url")
         val display = section.getString("display").toColoredString()
         val lore = section.getStringList("lore").map(String::toColoredString)
+        slot = section.getInt("slot")
         try {
             headIcon = PlayerSkullManager.getCustomSkull(url).apply {
                 val util = NmsItemStackUtil.getInstance()!!
