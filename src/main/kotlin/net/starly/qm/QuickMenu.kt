@@ -32,7 +32,7 @@ class QuickMenu : JavaPlugin() {
         if(!isPluginEnabled("net.starly.core.StarlyCore")) {
             logger.apply {
                 warning("[$name] ST-Core 플러그인이 적용되지 않았습니다! 플러그인을 비활성화합니다.")
-                warning("[$name] 다운로드 링크 : §fhttp://starly.kr/discord")
+                warning("[$name] 다운로드 링크 : §fhttp://starly.kr/")
             }
         }
 
