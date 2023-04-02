@@ -71,7 +71,7 @@ class QuickMenu : JavaPlugin() {
         try {
             Class.forName(path)
             return true
-        } catch (ignored: NoClassDefFoundError) {
+        } catch (ignored: ClassNotFoundException) {
         } catch (ex: Exception) { ex.printStackTrace() }
         return false
     }
