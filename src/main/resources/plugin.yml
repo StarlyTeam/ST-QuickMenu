@@ -1,28 +1,28 @@
 name: ST-QuickMenu
 main: net.starly.qm.QuickMenu
 author: Starly Team
-website: http://starly.kr/discord
+website: http://starly.kr/
 
 description: QuickMenu Plugin.
 
 softdepend:
   - ST-Core
 
-version: 1.0.2
+version: 1.0.3
 api-version: 1.13
 
 permissions:
   starly.qm.reload:
-    description: 퀵메뉴 명령어 퍼미션
+    description: 퀵메뉴 명령어 펄미션
   starly.qm.apply:
-    description: 퀵메뉴 명령어 퍼미션
+    description: 퀵메뉴 명령어 펄미션
   starly.qm.modify:
-    description: 퀵메뉴 명령어 퍼미션
+    description: 퀵메뉴 명령어 펄미션
   starly.qm.remove:
-    description: 퀵메뉴 명령어 퍼미션
+    description: 퀵메뉴 명령어 펄미션
   starly.qm.create:
-    description: 퀵메뉴 명령어 퍼미션
+    description: 퀵메뉴 명령어 펄미션
 
 commands:
   quick-menu:
-    aliases: [qm, 퀵메뉴]
+    aliases: [ qm, 퀵메뉴 ]
