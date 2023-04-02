@@ -29,7 +29,7 @@ class QuickMenu : JavaPlugin() {
 
     override fun onEnable() {
         // DEPENDENCY
-        if(server.pluginManager.getPlugin("ST-Core") == null) {
+        if(!isPluginEnabled("net.starly.core.StarlyCore")) {
             logger.apply {
                 warning("[$name] ST-Core 플러그인이 적용되지 않았습니다! 플러그인을 비활성화합니다.")
                 warning("[$name] 다운로드 링크 : §fhttp://starly.kr/discord")
@@ -67,4 +67,12 @@ class QuickMenu : JavaPlugin() {
             repo.register("MATRIX_${i}X${i}", GridPositionData("MATRIX_${i}X$i", i*i))
     }
 
+    private fun isPluginEnabled(path: String): Boolean {
+        try {
+            Class.forName(path)
+            return true
+        } catch (ignored: NoClassDefFoundError) {
+        } catch (ex: Exception) { ex.printStackTrace() }
+        return false
+    }
 }
