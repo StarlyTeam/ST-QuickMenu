@@ -8,10 +8,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 
@@ -26,7 +28,6 @@ class QBIconHandleListener: Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onSwap(event: PlayerDropItemEvent) {
-        //ST-QuickButton
         if(event.isCancelled) return
         if(isIcon(event.itemDrop.itemStack))
             event.isCancelled = true
@@ -61,6 +62,31 @@ class QBIconHandleListener: Listener {
         val cfg = ConfigLoader.get(null, DefaultSetting::class.java)
         if(cfg.isOpenType(DefaultSetting.OpenType.ICON))
             event.player.inventory.setItem(cfg.icon.slot - 1, cfg.icon.headIcon.clone())
+    }
+
+    @EventHandler
+    fun onDeath(event: PlayerDeathEvent) {
+        val player: Player = event.entity
+        val inventory: Array<ItemStack> = player.inventory.contents
+        val fifthSlotItem: ItemStack = inventory[4]
+        val cfg = ConfigLoader.get(null, DefaultSetting::class.java)
+
+        try {
+            if (fifthSlotItem.type != Material.AIR && cfg.isOpenType(DefaultSetting.OpenType.ICON)) {
+                event.drops.remove(fifthSlotItem)
+                inventory[4] = ItemStack(Material.AIR)
+                player.inventory.contents = inventory
+            }
+        } catch (ignored: Exception) {}
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun onRespawn(event: PlayerRespawnEvent) {
+        clearingIcon(event.player)
+        val cfg = ConfigLoader.get(null, DefaultSetting::class.java)
+        if (cfg.isOpenType(DefaultSetting.OpenType.ICON)){
+            event.player.inventory.setItem(cfg.icon.slot -1, cfg.icon.headIcon.clone())
+        }
     }
 
     companion object {
