@@ -3,7 +3,7 @@ package net.starly.qm.container
 import net.starly.core.jb.container.STContainer
 import net.starly.core.jb.container.button.STButton.STButtonBuilder
 import net.starly.core.jb.container.wrapper.InventoryClickEventWrapper
-import net.starly.core.jb.version.VersionController
+import net.starly.core.jb.version.nms.VersionController
 import net.starly.qm.QuickMenu
 import net.starly.qm.data.ButtonData
 import net.starly.qm.data.PresetData
@@ -11,7 +11,6 @@ import net.starly.qm.data.SoundData
 import net.starly.qm.extension.sendMessageAfterPrefix
 import net.starly.qm.extension.toFormattedString
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -195,7 +194,7 @@ class ButtonSettingInnerContainer(
 
                         event.isWheel -> {
                             player.sendMessageAfterPrefix("§f설정 할 사운드를 아래의 사이트에 있는 목록 중 선택하여 입력하세요.")
-                            player.sendMessage(" §a§nhttps://helpch.at/docs/${VersionController.getInstance().version.v.replace("-R0.1", "")}/org/bukkit/Sound.html")
+                            player.sendMessage(" §a§nhttps://helpch.at/docs/${VersionController.getInstance().version.version.replace("-R0.1", "")}/org/bukkit/Sound.html")
                             player.sendMessage(" §a혹은 '/playsound' 명령어에서 찾을 수 있는 키 값을 입력해도 됩니다.")
                             player.sendMessage(" §7 취소 : '취소' 입력")
                             player.sendMessage(" §7 삭제 : '-' 입력")

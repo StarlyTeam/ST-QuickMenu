@@ -21,7 +21,7 @@ class QuickButton(
     plugin: JavaPlugin
 ) {
 
-    private val armorStand = NmsOtherUtil.createArmorStandInstance(startLocation)
+    private val armorStand = NmsOtherUtil.createArmorStandInstance(startLocation, fun(_) {})
     var targeted = false
         private set
     private var defaultHeadPose: ArmorStandWrapper.HeadPoseWrapper? = null
@@ -44,21 +44,23 @@ class QuickButton(
 
     fun update(target: Player) {
         val eyeLocation = genLocation.getEye()
-        if(target.isWatching(eyeLocation)) {
-             if(!targeted) {
-                 armorStand.displayName = messageBox.get("selected-button-prefix") + button.description + messageBox.get("selected-button-suffix")
-                 button.onTarget(target)
-                 armorStand.teleport(target, genLocation.getFrontLocationAt(target.location))
-             } else {
-                 val tempPose = armorStand.getHeadPose()
-                 armorStand.setHeadPose(ArmorStandWrapper.HeadPoseWrapper(tempPose.x, tempPose.y + 15f, tempPose.z))
-                 armorStand.applyMeta(target)
-             }
+        if (target.isWatching(eyeLocation)) {
+            if (!targeted) {
+                armorStand.displayName =
+                    messageBox.get("selected-button-prefix") + button.description + messageBox.get("selected-button-suffix")
+                button.onTarget(target)
+                armorStand.teleport(target, genLocation.getFrontLocationAt(target.location), false)
+            } else {
+                val tempPose = armorStand.getHeadPose()
+                armorStand.setHeadPose(ArmorStandWrapper.HeadPoseWrapper(tempPose.x, tempPose.y + 15f, tempPose.z))
+                armorStand.applyMeta(target)
+            }
             targeted = true
         } else {
-            if(targeted) {
-                armorStand.displayName = messageBox.get("default-button-prefix") + button.description + messageBox.get("default-button-suffix")
-                armorStand.teleport(target, genLocation)
+            if (targeted) {
+                armorStand.displayName =
+                    messageBox.get("default-button-prefix") + button.description + messageBox.get("default-button-suffix")
+                armorStand.teleport(target, genLocation, false)
                 armorStand.resetHeadPose()
                 armorStand.applyMeta(target)
             }
